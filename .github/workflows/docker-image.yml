@@ -43,7 +43,7 @@ jobs:
       - name: Build and push frontend image
         uses: docker/build-push-action@v6
         with:
-          context: ./CrudService-Frontend
-          file: ./CrudService-Frontend/frontend.Dockerfile
+          context: ./CrudService-Frontend/frontend-react
+          file: ./CrudService-Frontend/frontend-react/frontend.Dockerfile
           push: ${{ github.event_name == 'push' }}
-          tags: ${{ format('{0}/docker-frontend-2400030558:latest', secrets.DOCKERHUB_USERNAME || 'jas0nakshay') }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-frontend-2400030558:latest
