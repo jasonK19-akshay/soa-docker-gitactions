@@ -34,7 +34,7 @@ services:
 
     build:
       context: ./CrudService
-      dockerfile: Dockerfile
+      dockerfile: backend.Dockerfile
 
     container_name: online-course-backend
 
@@ -64,7 +64,7 @@ services:
     image: jas0nakshay/docker-frontend-2400030558:latest
 
     build:
-      context: ./CrudService-Frontend
+      context: ./CrudService-Frontend/frontend-react
       dockerfile: frontend.Dockerfile
 
     container_name: online-course-frontend
