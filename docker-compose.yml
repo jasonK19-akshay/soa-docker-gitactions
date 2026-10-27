@@ -1,0 +1,90 @@
+services:
+
+  postgresdb:
+    image: postgres:16-alpine
+    container_name: online-course-postgres
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: exam_2400030558
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d exam_2400030558
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+    networks:
+      - springboot-postgres-net
+
+    restart: unless-stopped
+
+
+  backend:
+    image: jas0nakshay/docker-backend-2400030558:latest
+
+    build:
+      context: ./CrudService
+      dockerfile: Dockerfile
+
+    container_name: online-course-backend
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      SERVER_PORT: "8081"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/exam_2400030558
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin123
+
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+
+    networks:
+      - springboot-postgres-net
+
+    restart: on-failure
+
+
+  frontend:
+    image: jas0nakshay/docker-frontend-2400030558:latest
+
+    build:
+      context: ./CrudService-Frontend
+      dockerfile: Dockerfile
+
+    container_name: online-course-frontend
+
+    ports:
+      - "3000:80"
+
+    depends_on:
+      - backend
+
+    networks:
+      - springboot-postgres-net
+
+    restart: on-failure
+
+
+volumes:
+  postgres_data:
+
+
+networks:
+  springboot-postgres-net:
+    driver: bridge
