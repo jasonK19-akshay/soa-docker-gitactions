@@ -17,53 +17,55 @@ import com.klef.soa.exam.entity.OnlineCourse;
 import com.klef.soa.exam.service.OnlineCourseService;
 
 @RestController
-@RequestMapping("/onlinecourse")
+@RequestMapping("/api/courses")
 public class OnlineCourseController {
 
     @Autowired
     private OnlineCourseService service;
 
-    @GetMapping("/")
-    public String demo() {
-
-        return "Online Course Service Project";
-    }
-
-    @PostMapping("/add")
+    // CREATE
+    @PostMapping
     public ResponseEntity<OnlineCourse> addOnlineCourse(
             @RequestBody OnlineCourse course) {
 
-        return ResponseEntity.status(201)
-                .body(service.addOnlineCourse(course));
+        OnlineCourse saved =
+                service.addOnlineCourse(course);
+
+        return ResponseEntity.status(201).body(saved);
     }
 
-    @GetMapping("/displayall")
+    // READ ALL
+    @GetMapping
     public ResponseEntity<List<OnlineCourse>> displayAll() {
 
         return ResponseEntity.ok(service.displayAll());
     }
 
-    @GetMapping("/display/{ocid}")
+    // READ BY ID
+    @GetMapping("/{id}")
     public ResponseEntity<OnlineCourse> displayById(
-            @PathVariable("ocid") long ocid) {
+            @PathVariable("id") long id) {
 
-        return ResponseEntity.ok(service.displayById(ocid));
+        return ResponseEntity.ok(
+                service.displayById(id));
     }
 
-    @PutMapping("/update/{ocid}")
+    // UPDATE
+    @PutMapping("/{id}")
     public ResponseEntity<OnlineCourse> updateOnlineCourse(
-            @PathVariable("ocid") long ocid,
+            @PathVariable("id") long id,
             @RequestBody OnlineCourse course) {
 
         return ResponseEntity.ok(
-                service.updateOnlineCourse(ocid, course));
+                service.updateOnlineCourse(id, course));
     }
 
-    @DeleteMapping("/delete/{ocid}")
+    // DELETE
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOnlineCourse(
-            @PathVariable("ocid") long ocid) {
+            @PathVariable("id") long id) {
 
-        service.deleteOnlineCourseById(ocid);
+        service.deleteOnlineCourseById(id);
 
         return ResponseEntity.noContent().build();
     }
