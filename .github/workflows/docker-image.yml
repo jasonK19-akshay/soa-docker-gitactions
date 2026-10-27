@@ -6,35 +6,44 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Download the repository code
       - name: Checkout source code
         uses: actions/checkout@v4
 
+      # Step 2: Prepare Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Step 3: Login to Docker Hub only when publishing images
       - name: Log in to Docker Hub
+        if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Step 4: Build and push the backend image
       - name: Build and push backend image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
-          context: ./STUDENTAPI-SPRINGBOOT
-          file: ./STUDENTAPI-SPRINGBOOT/backend.Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-git-actions-backend:latest
+          context: ./CrudService
+          file: ./CrudService/Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          tags: ${{ format('{0}/docker-backend-2400030558:latest', secrets.DOCKERHUB_USERNAME || 'jas0nakshay') }}
 
+      # Step 5: Build and push the frontend image
       - name: Build and push frontend image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
-          context: ./STUDENTAPI-REACT
-          file: ./STUDENTAPI-REACT/frontend.Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-git-actions-frontend:latest
+          context: ./CrudService-Frontend
+          file: ./CrudService-Frontend/Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          tags: ${{ format('{0}/docker-frontend-2400030558:latest', secrets.DOCKERHUB_USERNAME || 'jas0nakshay') }}
