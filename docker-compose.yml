@@ -65,7 +65,7 @@ services:
 
     build:
       context: ./CrudService-Frontend
-      dockerfile: Dockerfile
+      dockerfile: frontend.Dockerfile
 
     container_name: online-course-frontend
 
