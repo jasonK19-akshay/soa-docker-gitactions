@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./CrudService
-          file: ./CrudService/Dockerfile
+          file: ./CrudService/backend.Dockerfile
           push: ${{ github.event_name == 'push' }}
           tags: ${{ format('{0}/docker-backend-2400030558:latest', secrets.DOCKERHUB_USERNAME || 'jas0nakshay') }}
 
@@ -44,6 +44,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./CrudService-Frontend
-          file: ./CrudService-Frontend/Dockerfile
+          file: ./CrudService-Frontend/frontend.Dockerfile
           push: ${{ github.event_name == 'push' }}
           tags: ${{ format('{0}/docker-frontend-2400030558:latest', secrets.DOCKERHUB_USERNAME || 'jas0nakshay') }}
