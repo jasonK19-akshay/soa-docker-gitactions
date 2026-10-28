@@ -205,11 +205,6 @@ function App() {
 
       setEditingId(current.id);
 
-      setNotice({
-        type: 'info',
-        text: `Editing course ID ${current.id}. The ID is shown for reference and cannot be edited.`,
-      });
-
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
@@ -431,7 +426,7 @@ function App() {
                   <p>
                     {editingId === null
                       ? 'Fill in the details below to add a new course.'
-                      : `You are updating course ID ${editingId}.`}
+                      : 'Update the course details below.'}
                   </p>
                 </div>
 
